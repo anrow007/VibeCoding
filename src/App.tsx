@@ -9,6 +9,7 @@ interface StockData {
   high: number
   low: number
   volume: number
+  averageVolume20D: number
   marketCap: string
 }
 
@@ -30,6 +31,7 @@ function App() {
           high: 879.50,
           low: 861.20,
           volume: 45230000,
+          averageVolume20D: 38500000,
           marketCap: '2.15T'
         }
         setStockData(mockData)
@@ -100,6 +102,50 @@ function App() {
             <span className="label">Market Cap:</span>
             <span className="value">${stockData.marketCap}</span>
           </div>
+        </div>
+      </div>
+
+      <div className="volume-chart">
+        <h3>Volume Analysis</h3>
+        <div className="chart-container">
+          <div className="chart-bar-wrapper">
+            <div className="chart-labels">
+              <span className="chart-label today">Today: {stockData.volume.toLocaleString()}</span>
+              <span className="chart-label average">20D Avg: {stockData.averageVolume20D.toLocaleString()}</span>
+            </div>
+            <div className="chart-bars">
+              <div className="chart-bar-group">
+                <div 
+                  className="chart-bar today-bar" 
+                  style={{ 
+                    height: `${(stockData.volume / Math.max(stockData.volume, stockData.averageVolume20D)) * 100}%` 
+                  }}
+                >
+                  <span className="bar-value">{(stockData.volume / 1000000).toFixed(1)}M</span>
+                </div>
+                <div 
+                  className="chart-bar average-bar" 
+                  style={{ 
+                    height: `${(stockData.averageVolume20D / Math.max(stockData.volume, stockData.averageVolume20D)) * 100}%` 
+                  }}
+                >
+                  <span className="bar-value">{(stockData.averageVolume20D / 1000000).toFixed(1)}M</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="volume-insight">
+          {stockData.volume > stockData.averageVolume20D ? (
+            <p className="insight positive">
+              📈 Trading volume is <strong>{((stockData.volume / stockData.averageVolume20D - 1) * 100).toFixed(1)}%</strong> above average
+            </p>
+          ) : (
+            <p className="insight negative">
+              📉 Trading volume is <strong>{((1 - stockData.volume / stockData.averageVolume20D) * 100).toFixed(1)}%</strong> below average
+            </p>
+          )}
         </div>
       </div>
 
