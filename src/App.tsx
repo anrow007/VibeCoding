@@ -68,45 +68,64 @@ function App() {
 
   return (
     <div className="app">
-      <h1>Stock Dashboard</h1>
+      <header className="dashboard-header">
+        <h1>Stock Dashboard</h1>
+        <div className="last-updated">
+          Last updated: {new Date().toLocaleTimeString()}
+        </div>
+      </header>
       
-      <div className="stock-card">
-        <div className="stock-header">
-          <h2>{stockData.symbol}</h2>
-          <div className="stock-price">${stockData.price.toFixed(2)}</div>
-        </div>
+      <main className="dashboard-content">
+        <div className="stock-card">
+          <div className="stock-header">
+            <div className="stock-symbol">
+              <h2>{stockData.symbol}</h2>
+              <span className="company-name">NVIDIA Corporation</span>
+            </div>
+            <div className="stock-price">${stockData.price.toFixed(2)}</div>
+          </div>
         
-        <div className={`stock-change ${isPositive ? 'positive' : 'negative'}`}>
-          <span className="change-amount">
-            {isPositive ? '+' : ''}${stockData.change.toFixed(2)}
-          </span>
-          <span className="change-percent">
-            ({isPositive ? '+' : ''}{stockData.changePercent.toFixed(2)}%)
-          </span>
+          <div className={`stock-change ${isPositive ? 'positive' : 'negative'}`}>
+            <div className="change-container">
+              <span className="change-amount">
+                {isPositive ? '+' : ''}${stockData.change.toFixed(2)}
+              </span>
+              <span className="change-percent">
+                ({isPositive ? '+' : ''}{stockData.changePercent.toFixed(2)}%)
+              </span>
+            </div>
+            <div className="change-indicator">
+              {isPositive ? '📈' : '📉'}
+            </div>
+          </div>
+
+          <div className="stock-metrics">
+            <div className="metrics-grid">
+              <div className="metric-card">
+                <span className="metric-label">Day High</span>
+                <span className="metric-value">${stockData.high.toFixed(2)}</span>
+              </div>
+              <div className="metric-card">
+                <span className="metric-label">Day Low</span>
+                <span className="metric-value">${stockData.low.toFixed(2)}</span>
+              </div>
+              <div className="metric-card">
+                <span className="metric-label">Volume</span>
+                <span className="metric-value">{(stockData.volume / 1000000).toFixed(1)}M</span>
+              </div>
+              <div className="metric-card">
+                <span className="metric-label">Market Cap</span>
+                <span className="metric-value">${stockData.marketCap}</span>
+              </div>
+            </div>
+            </div>
         </div>
 
-        <div className="stock-details">
-          <div className="detail-item">
-            <span className="label">High:</span>
-            <span className="value">${stockData.high.toFixed(2)}</span>
+        <div className="volume-chart">
+          <div className="chart-header">
+            <h3>Volume Analysis</h3>
+            <div className="chart-period">Today vs 20D Average</div>
           </div>
-          <div className="detail-item">
-            <span className="label">Low:</span>
-            <span className="value">${stockData.low.toFixed(2)}</span>
-          </div>
-          <div className="detail-item">
-            <span className="label">Volume:</span>
-            <span className="value">{stockData.volume.toLocaleString()}</span>
-          </div>
-          <div className="detail-item">
-            <span className="label">Market Cap:</span>
-            <span className="value">${stockData.marketCap}</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="volume-chart">
-        <h3>Volume Analysis</h3>
         <div className="chart-container">
           <div className="chart-bar-wrapper">
             <div className="chart-labels">
@@ -146,12 +165,9 @@ function App() {
               📉 Trading volume is <strong>{((1 - stockData.volume / stockData.averageVolume20D) * 100).toFixed(1)}%</strong> below average
             </p>
           )}
+          </div>
         </div>
-      </div>
-
-      <div className="last-updated">
-        Last updated: {new Date().toLocaleTimeString()}
-      </div>
+      </main>
     </div>
   )
 }
